@@ -29,7 +29,8 @@ jobs:
                   cd thunderstore
                   tcli build
                   $zipFile = Get-ChildItem -Path "../build" -Filter "*.zip"
-                  7z x $zipFile manifest.json -y
+                  $zipFile = $zipFile.Name
+                  7z x "../build/$zipFile" manifest.json -y
                   cd ..
               shell: powershell
 
