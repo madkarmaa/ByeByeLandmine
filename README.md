@@ -1,3 +1,3 @@
 # ByeByeLandmine
 
-A mod for the game Lethal Company
+Replaces the explosion sound of landmines with the sound "Bye Bye mog meme sound effect"
