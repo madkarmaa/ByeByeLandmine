@@ -87,6 +87,7 @@ jobs:
               run: |
                   manifest=$(cat ./thunderstore/manifest.json)
                   name=$(echo "$manifest" | jq -r '.name')
+                  version=$(echo "$manifest" | jq -r '.version_number')
                   echo "name=$name" >> $GITHUB_OUTPUT
 
             - name: Download release asset
