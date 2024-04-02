@@ -15,11 +15,15 @@ BepInEx-BepInExPack = "5.4.2100"
 [build]
 icon = "./icon.png"
 readme = "./README.md"
-outdir = "./build"
+outdir = "../build"
 
 [[build.copy]]
-source = "./dist"
-target = ""
+source = "./assets"
+target = "./plugin/assets/"
+
+[[build.copy]]
+source = "./madkarma.ByeByeLandmine.dll"
+target = "./plugin/"
 
 
 [publish]
