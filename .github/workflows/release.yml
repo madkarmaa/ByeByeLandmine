@@ -21,9 +21,6 @@ jobs:
               with:
                   dotnet-version: 7.0.407
 
-            - name: Install Thunderstore CLI
-              run: dotnet tool install -g tcli
-
             - name: Build solution
               run: dotnet build
 
