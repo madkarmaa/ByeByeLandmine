@@ -89,6 +89,7 @@ jobs:
                   name=$(echo "$manifest" | jq -r '.name')
                   version=$(echo "$manifest" | jq -r '.version_number')
                   echo "name=$name" >> $GITHUB_OUTPUT
+                  echo "version=$version" >> $GITHUB_OUTPUT
 
             - name: Download release asset
               id: download_asset
