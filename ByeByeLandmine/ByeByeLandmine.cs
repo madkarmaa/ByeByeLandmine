@@ -53,7 +53,7 @@ namespace ByeByeLandmine
             string location = Instance.Info.Location;
             location = location.TrimEnd((MyPluginInfo.PLUGIN_GUID + ".dll").ToCharArray());
 
-            Bundle = AssetBundle.LoadFromFile(location + "byebye");
+            Bundle = AssetBundle.LoadFromFile(location + "/assets/byebye");
 
             if (Bundle != null)
             {

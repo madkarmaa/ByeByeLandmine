@@ -1,0 +1,58 @@
+name: Build and Release
+
+on:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: windows-latest
+
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v3
+              with:
+                  dotnet-version: 7.0.407
+
+            - name: Install tcli
+              run: dotnet tool install -g tcli
+
+            - name: Build Solution
+              run: dotnet build
+
+            - name: Get Version Number
+              id: get_version
+              run: |
+                  $manifest = Get-Content ./thunderstore/manifest.json | ConvertFrom-Json
+                  $version = $manifest.version_number
+                  echo "::set-output name=version::$version"
+              shell: powershell
+
+            - name: Zip Thunderstore Folder
+              run: Compress-Archive -Path ./thunderstore/* -DestinationPath mod-${{ steps.get_version.outputs.version }}.zip
+              shell: powershell
+
+            - name: Create Release
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: ${{ steps.get_version.outputs.version }}
+                  release_name: Release ${{ steps.get_version.outputs.version }}
+                  draft: false
+                  prerelease: false
+
+            - name: Upload Release Asset
+              id: upload-release-asset
+              uses: actions/upload-release-asset@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: ./mod-${{ steps.get_version.outputs.version }}.zip
+                  asset_name: mod-${{ steps.get_version.outputs.version }}.zip
+                  asset_content_type: application/zip
