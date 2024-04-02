@@ -76,6 +76,9 @@ jobs:
         needs: build-and-release
 
         steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
             - name: Get manifest data
               id: get_manifest_data
               run: |
@@ -91,11 +94,18 @@ jobs:
                   echo "deps=$deps" >> $GITHUB_OUTPUT
                   echo "website=$website" >> $GITHUB_OUTPUT
 
+            - name: Download release asset
+              id: download_asset
+              uses: robinraju/release-downloader@v1.9
+              with:
+                  latest: true
+                  fileName: v${{ steps.get_manifest_data.outputs.version }}.zip
+
             - name: Publish to Thunderstore
               uses: GreenTF/upload-thunderstore-package@v4.2
               with:
                   namespace: madkarma
-                  file: ./v${{ steps.get_manifest_data.outputs.version }}.zip
+                  file: ${{ fromJson(steps.download_asset.outputs.downloaded_files)[0] }}
                   token: ${{ secrets.THUNDERSTORE_TOKEN }}
                   name: ${{ steps.get_manifest_data.outputs.name }}
                   version: ${{ github.ref_name }}
