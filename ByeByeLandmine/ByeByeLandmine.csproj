@@ -74,6 +74,6 @@
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="call .\move.bat" />
+      <Exec Command="call .\copy.bat" />
     </Target>
 </Project>
