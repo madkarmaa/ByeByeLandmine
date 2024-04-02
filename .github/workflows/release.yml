@@ -71,6 +71,25 @@ jobs:
                   asset_path: ./v${{ steps.get_manifest_data.outputs.version }}.zip
                   asset_name: v${{ steps.get_manifest_data.outputs.version }}.zip
                   asset_content_type: application/zip
+    publish-to-thunderstore:
+        runs-on: ubuntu-latest
+        needs: build-and-release
+
+        steps:
+            - name: Get manifest data
+              id: get_manifest_data
+              run: |
+                  manifest=$(cat ./thunderstore/manifest.json)
+                  name=$(echo "$manifest" | jq -r '.name')
+                  description=$(echo "$manifest" | jq -r '.description')
+                  version=$(echo "$manifest" | jq -r '.version_number')
+                  deps=$(echo "$manifest" | jq -r '.dependencies')
+                  website=$(echo "$manifest" | jq -r '.website_url')
+                  echo "name=$name" >> $GITHUB_OUTPUT
+                  echo "description=$description" >> $GITHUB_OUTPUT
+                  echo "version=$version" >> $GITHUB_OUTPUT
+                  echo "deps=$deps" >> $GITHUB_OUTPUT
+                  echo "website=$website" >> $GITHUB_OUTPUT
 
             - name: Publish to Thunderstore
               uses: GreenTF/upload-thunderstore-package@v4.2
