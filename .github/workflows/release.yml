@@ -32,7 +32,7 @@ jobs:
               run: |
                   $manifest = Get-Content ./thunderstore/manifest.json | ConvertFrom-Json
                   $version = $manifest.version_number
-                  echo "version=$version" >> $GITHUB_OUTPUT
+                  echo "version=$version" >> '$GITHUB_OUTPUT'
               shell: powershell
 
             - name: Zip mod files
