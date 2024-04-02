@@ -21,9 +21,6 @@ jobs:
               with:
                   dotnet-version: 7.0.407
 
-            - name: Build solution
-              run: dotnet build
-
             - name: Get version number
               id: get_version
               run: |
@@ -31,6 +28,16 @@ jobs:
                   $version = $manifest.version_number
                   echo "version=$version" >> $env:GITHUB_OUTPUT
               shell: powershell
+
+            - name: Create version tag
+              run: |
+                  git config --global user.name 'github-actions'
+                  git config --global user.email 'github-actions@github.com'
+                  git tag v${{ steps.get_version.outputs.version }}
+                  git push origin v${{ steps.get_version.outputs.version }}
+
+            - name: Build solution
+              run: dotnet build
 
             - name: Zip mod files
               run: Compress-Archive -Path ./thunderstore/* -DestinationPath v${{ steps.get_version.outputs.version }}.zip
