@@ -76,4 +76,6 @@ jobs:
               run: dotnet tool install -g tcli
 
             - name: Publish to Thunderstore
-              run: tcli publish --token ${{ secrets.THUNDERSTORE_TOKEN }}
+              run: |
+                  cd thunderstore
+                  tcli publish --token ${{ secrets.THUNDERSTORE_TOKEN }}
