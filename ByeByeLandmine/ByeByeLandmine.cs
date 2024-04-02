@@ -1,19 +1,19 @@
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using LobbyCompatibility.Attributes;
-using LobbyCompatibility.Enums;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace ByeByeLandmine
 {
     [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-    [BepInDependency("BMX.LobbyCompatibility", BepInDependency.DependencyFlags.HardDependency)]
-    [LobbyCompatibility(CompatibilityLevel.ClientOnly, VersionStrictness.None)]
     public class ByeByeLandmine : BaseUnityPlugin
     {
         public static ByeByeLandmine Instance { get; private set; } = null!;
         internal new static ManualLogSource Logger { get; private set; } = null!;
         internal static Harmony? Harmony { get; set; }
+        internal static List<AudioClip> Sfx { get; private set; } = null!;
+        internal static AssetBundle Bundle { get; private set; } = null!;
 
         private void Awake()
         {
@@ -22,7 +22,8 @@ namespace ByeByeLandmine
 
             Patch();
 
-            Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded!");
+            if (LoadAudioFile()) Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded!");
+            else Unpatch();
         }
 
         internal static void Patch()
@@ -43,6 +44,28 @@ namespace ByeByeLandmine
             Harmony?.UnpatchSelf();
 
             Logger.LogDebug("Finished unpatching!");
+        }
+
+        internal static bool LoadAudioFile()
+        {
+            Sfx = [];
+
+            string location = Instance.Info.Location;
+            location = location.TrimEnd((MyPluginInfo.PLUGIN_GUID + ".dll").ToCharArray());
+
+            Bundle = AssetBundle.LoadFromFile(location + "byebye");
+
+            if (Bundle != null)
+            {
+                Sfx = [.. Bundle.LoadAllAssets<AudioClip>()];
+                Logger.LogInfo("Successfully loaded the audio file");
+                return true;
+            }
+            else
+            {
+                Logger.LogError("Failed to load audio file");
+                return false;
+            }
         }
     }
 }
