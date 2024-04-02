@@ -81,3 +81,4 @@ jobs:
               with:
                   files: 'build/*.zip'
                   repo-token: ${{ secrets.GITHUB_TOKEN }}
+                  release-tag: v${{ steps.get_manifest_data.outputs.version }}
