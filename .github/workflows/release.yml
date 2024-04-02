@@ -25,12 +25,11 @@ jobs:
               run: dotnet tool install -g tcli
 
             - name: Generate manifest
-              continue-on-error: true
               run: |
                   cd thunderstore
                   tcli build
                   $zipFile = Get-ChildItem -Path "../build" -Filter "*.zip"
-                  7z e $zipFile -o. manifest.json
+                  7z x $zipFile manifest.json -y
                   cd ..
               shell: powershell
 
