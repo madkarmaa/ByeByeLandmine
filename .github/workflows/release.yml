@@ -105,7 +105,7 @@ jobs:
                   file: ${{ fromJson(steps.download_asset.outputs.downloaded_files)[0] }}
                   token: ${{ secrets.THUNDERSTORE_TOKEN }}
                   name: ${{ steps.get_manifest_data.outputs.name }}
-                  version: ${{ github.ref_name }}
+                  version: ${{ steps.get_manifest_data.outputs.version }}
                   community: lethal-company
                   categories: |
                       bepinex
