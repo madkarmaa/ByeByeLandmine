@@ -47,10 +47,6 @@ jobs:
             - name: Build solution
               run: dotnet build
 
-            - name: Zip mod files
-              run: Compress-Archive -Path ./thunderstore/* -DestinationPath v${{ steps.get_manifest_data.outputs.version }}.zip
-              shell: powershell
-
             - name: Create release
               id: create_release
               uses: actions/create-release@v1
@@ -62,16 +58,6 @@ jobs:
                   draft: false
                   prerelease: false
 
-            - name: Upload mod zip to release
-              uses: actions/upload-release-asset@v1
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  upload_url: ${{ steps.create_release.outputs.upload_url }}
-                  asset_path: ./v${{ steps.get_manifest_data.outputs.version }}.zip
-                  asset_name: v${{ steps.get_manifest_data.outputs.version }}.zip
-                  asset_content_type: application/zip
-
             - name: Install Thunderstore CLI
               run: dotnet tool install -g tcli
 
@@ -79,3 +65,9 @@ jobs:
               run: |
                   cd thunderstore
                   tcli publish --token ${{ secrets.THUNDERSTORE_TOKEN }}
+
+            - name: Upload mod zip to release
+              uses: AButler/upload-release-assets@v3.0
+              with:
+                  files: 'build/*.zip'
+                  repo-token: ${{ secrets.GITHUB_TOKEN }}
