@@ -4,7 +4,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "madkarma"
 name = "ByeByeLandmine"
-versionNumber = "1.0.5"
+versionNumber = "1.0.6"
 description = "Get mogged by landmines"
 websiteUrl = "https://github.com/madkarmaa/ByeByeLandmine"
 containsNsfwContent = false
