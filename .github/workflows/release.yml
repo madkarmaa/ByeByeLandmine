@@ -31,6 +31,7 @@ jobs:
                   tcli build
                   $zipFile = Get-ChildItem -Path "../build" -Filter "*.zip"
                   tar xvfm $zipFile -C . manifest.json
+                  cd ..
               shell: powershell
 
             - name: Get manifest data
