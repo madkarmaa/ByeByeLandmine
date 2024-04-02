@@ -79,6 +79,9 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v3
 
+            - name: Install jq
+              run: sudo apt install -y jq
+
             - name: Get manifest data
               id: get_manifest_data
               run: |
